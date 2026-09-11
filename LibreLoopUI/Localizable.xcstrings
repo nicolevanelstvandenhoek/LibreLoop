@@ -2,594 +2,1790 @@
   "sourceLanguage" : "en",
   "strings" : {
     "—" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "—"
+          }
+        }
+      }
     },
     "(%@)" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(%@)"
+          }
+        }
+      }
     },
     "%@ remaining" : {
       "comment" : "Lifecycle bar detail: active time remaining",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ remaining"
+          }
+        }
+      }
     },
     "%@ until ready" : {
       "comment" : "Lifecycle bar detail: warmup time remaining",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ until ready"
+          }
+        }
+      }
     },
     "%@/min" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/min"
+          }
+        }
+      }
     },
     "%1$@'s algorithm was designed and tuned against CGMs that emit a new reading every 5 minutes. With this setting on, %1$@ receives a new reading from the FreeStyle Libre 3 every minute instead." : {
       "comment" : "Minute-by-minute warning paragraph 1 (1: appName)",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@'s algorithm was designed and tuned against CGMs that emit a new reading every 5 minutes. With this setting on, %1$@ receives a new reading from the FreeStyle Libre 3 every minute instead."
+          }
+        }
+      }
     },
     "• Dosing decisions may shift sooner or further than what %1$@'s review and tuning guidance assumes." : {
       "comment" : "Minute-by-minute warning bullet 1 (1: appName)",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• Dosing decisions may shift sooner or further than what %1$@'s review and tuning guidance assumes."
+          }
+        }
+      }
     },
     "• Trend math, retrospective correction, and momentum effects were validated at the 5-minute cadence." : {
       "comment" : "Minute-by-minute warning bullet 2",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• Trend math, retrospective correction, and momentum effects were validated at the 5-minute cadence."
+          }
+        }
+      }
     },
     "• You're accepting responsibility for monitoring outcomes more closely while this is on." : {
       "comment" : "Minute-by-minute warning bullet 3",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• You're accepting responsibility for monitoring outcomes more closely while this is on."
+          }
+        }
+      }
     },
     "8-character hex (little-endian)" : {
       "comment" : "Receiver ID field placeholder",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "8-character hex (little-endian)"
+          }
+        }
+      }
     },
     "Activated" : {
       "comment" : "Sensor activation date row label",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activated"
+          }
+        }
+      }
     },
     "Apply a new Sensor" : {
       "comment" : "Apply-sensor screen title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apply a new Sensor"
+          }
+        }
+      }
     },
     "Authenticating with sensor…" : {
       "comment" : "Pairing status: handshaking",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authenticating with sensor…"
+          }
+        }
+      }
     },
     "Avoid scars, moles, stretch marks, lumps, and insulin injection sites. Rotate sites between applications." : {
       "comment" : "Apply-sensor help step 1 note",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avoid scars, moles, stretch marks, lumps, and insulin injection sites. Rotate sites between applications."
+          }
+        }
+      }
     },
     "Awaiting first reading" : {
       "comment" : "Lifecycle bar detail: awaiting first reading after pairing",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Awaiting first reading"
+          }
+        }
+      }
     },
     "BLE PIN" : {
       "comment" : "BLE PIN row label",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BLE PIN"
+          }
+        }
+      }
     },
     "Bluetooth" : {
       "comment" : "Bluetooth address row label\n   Bluetooth connection row label",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bluetooth"
+          }
+        }
+      }
     },
     "Cancel" : {
       "comment" : "Cancel button",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
     },
     "Clinical backfill" : {
       "comment" : "Sample source: clinical backfill",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clinical backfill"
+          }
+        }
+      }
     },
     "Connected" : {
       "comment" : "Connection status: connected",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connected"
+          }
+        }
+      }
     },
     "Connecting…" : {
       "comment" : "Connection status: connecting\n   Pairing status: connecting",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connecting…"
+          }
+        }
+      }
     },
     "Continue" : {
       "comment" : "Continue button",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        }
+      }
     },
     "Copied %d lines" : {
       "comment" : "Activity log copied confirmation",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied %d lines"
+          }
+        }
+      }
     },
     "Copy log" : {
       "comment" : "Copy activity log button",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy log"
+          }
+        }
+      }
     },
     "Couldn't parse hex." : {
       "comment" : "Receiver ID validation error: parse failure",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't parse hex."
+          }
+        }
+      }
     },
     "Debug Info" : {
       "comment" : "Settings section: debug info",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug Info"
+          }
+        }
+      }
     },
     "Delete" : {
       "comment" : "Delete button",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
     },
     "Delete CGM" : {
       "comment" : "Delete CGM button",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete CGM"
+          }
+        }
+      }
     },
     "Delete CGM?" : {
       "comment" : "Delete CGM confirmation title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete CGM?"
+          }
+        }
+      }
     },
     "Developer" : {
       "comment" : "Settings section: developer tools",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Developer"
+          }
+        }
+      }
     },
     "Disconnected" : {
       "comment" : "Connection status: disconnected",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disconnected"
+          }
+        }
+      }
     },
     "Display only" : {
       "comment" : "Reading is display-only, not used for dosing",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Display only"
+          }
+        }
+      }
     },
     "Do not remove the cap from the sensor applicator until you're ready to apply the sensor." : {
       "comment" : "Apply-sensor cap instruction",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do not remove the cap from the sensor applicator until you're ready to apply the sensor."
+          }
+        }
+      }
     },
     "Do not reuse the cap. The sterile barrier is broken once removed." : {
       "comment" : "Apply-sensor help step 3 note",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do not reuse the cap. The sterile barrier is broken once removed."
+          }
+        }
+      }
     },
     "Done" : {
       "comment" : "Done button",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        }
+      }
     },
     "Each entry is one decoded packet. Tap to see when it arrived and every decoded field — including the realtime frame's historical lag, which is why the embedded 5-min value is always ~17 min behind." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Each entry is one decoded packet. Tap to see when it arrived and every decoded field — including the realtime frame's historical lag, which is why the embedded 5-min value is always ~17 min behind."
+          }
+        }
+      }
     },
     "Each series is plotted by lifeCount (minutes since sensor start). Realtime current and Clinical word[5] are identical by spec — clinical dots should land on the realtime line except across reconnect gaps." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Each series is plotted by lifeCount (minutes since sensor start). Realtime current and Clinical word[5] are identical by spec — clinical dots should land on the realtime line except across reconnect gaps."
+          }
+        }
+      }
     },
     "Enable" : {
       "comment" : "Enable button",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable"
+          }
+        }
+      }
     },
     "Enter exactly 8 hex characters." : {
       "comment" : "Receiver ID validation error: wrong length",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter exactly 8 hex characters."
+          }
+        }
+      }
     },
     "Enter the receiver ID this sensor was originally paired under. The sensor only accepts a switch-receiver command from the same ID it remembers — there's no way to recover without it." : {
       "comment" : "Recovery screen explanation",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter the receiver ID this sensor was originally paired under. The sensor only accepts a switch-receiver command from the same ID it remembers — there's no way to recover without it."
+          }
+        }
+      }
     },
     "Every realtime reading (~1/min) is sent to %1$@." : {
       "comment" : "Forwarding footer: minute-by-minute on (1: appName)",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every realtime reading (~1/min) is sent to %1$@."
+          }
+        }
+      }
     },
     "Example: `78563412`. If this sensor was paired with this app before, the value is shown as \"Receiver ID\" in the Debug Info section of the Libre 3 CGM settings page." : {
       "comment" : "Receiver ID field help text",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Example: `78563412`. If this sensor was paired with this app before, the value is shown as \"Receiver ID\" in the Debug Info section of the Libre 3 CGM settings page."
+          }
+        }
+      }
     },
     "Experimental setting" : {
       "comment" : "Minute-by-minute warning header",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Experimental setting"
+          }
+        }
+      }
     },
     "Falling ↘" : {
       "comment" : "Trend: falling",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Falling ↘"
+          }
+        }
+      }
     },
     "Falling quickly ⇊" : {
       "comment" : "Trend: falling quickly",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Falling quickly ⇊"
+          }
+        }
+      }
     },
     "Filter" : {
       "comment" : "Activity log filter picker label",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter"
+          }
+        }
+      }
     },
     "Forwarding to %1$@" : {
       "comment" : "Sample detail section: forwarding (1: appName)\n   Settings section: forwarding (1: appName)",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forwarding to %1$@"
+          }
+        }
+      }
     },
     "FreeStyle Libre 3 / 3+" : {
-      "comment" : "Settings screen title"
+      "comment" : "Settings screen title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FreeStyle Libre 3 / 3+"
+          }
+        }
+      }
     },
     "Glucose Streams" : {
       "comment" : "Developer: glucose streams debug view",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glucose Streams"
+          }
+        }
+      }
     },
     "Historical backfill" : {
       "comment" : "Sample source: historical backfill",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historical backfill"
+          }
+        }
+      }
     },
     "Hold steady for a moment so the sensor seats fully against the skin." : {
       "comment" : "Apply-sensor help step 4 note",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold steady for a moment so the sensor seats fully against the skin."
+          }
+        }
+      }
     },
     "Hold the BACK of your phone against the sensor." : {
       "comment" : "Scan-sensor help step 1 body",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold the BACK of your phone against the sensor."
+          }
+        }
+      }
     },
     "Hold the top of your phone against the sensor." : {
       "comment" : "Scan-sensor instruction",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold the top of your phone against the sensor."
+          }
+        }
+      }
     },
     "Hold your phone to the sensor" : {
       "comment" : "Pairing status: NFC scanning",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold your phone to the sensor"
+          }
+        }
+      }
     },
     "How to apply a Sensor" : {
       "comment" : "Apply-sensor help screen title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How to apply a Sensor"
+          }
+        }
+      }
     },
     "HOW TO APPLY A SENSOR" : {
       "comment" : "Apply-sensor help button",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HOW TO APPLY A SENSOR"
+          }
+        }
+      }
     },
     "How to scan a Sensor" : {
       "comment" : "Scan-sensor help screen title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How to scan a Sensor"
+          }
+        }
+      }
     },
     "HOW TO SCAN A SENSOR" : {
       "comment" : "Scan-sensor help button",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HOW TO SCAN A SENSOR"
+          }
+        }
+      }
     },
     "If your phone moves away, the scan will fail and you'll need to try again." : {
       "comment" : "Scan-sensor help step 2 note",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If your phone moves away, the scan will fail and you'll need to try again."
+          }
+        }
+      }
     },
     "Initializing" : {
       "comment" : "CGM status highlight: waiting for first reading",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Initializing"
+          }
+        }
+      }
     },
     "Issue" : {
       "comment" : "Sample detail: quality issue",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issue"
+          }
+        }
+      }
     },
     "Keep it still — your phone will vibrate once the sensor is paired." : {
       "comment" : "Scan-sensor stillness instruction",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep it still — your phone will vibrate once the sensor is paired."
+          }
+        }
+      }
     },
     "Keep the phone still. Pairing takes a few seconds." : {
       "comment" : "Scan-sensor help step 2 body",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep the phone still. Pairing takes a few seconds."
+          }
+        }
+      }
     },
     "Keeps the clinical channel subscribed so the clinical/raw charts update every minute. Off by default — only needed for stream inspection, and it adds per-reconnect clinical traffic. Takes effect on the next reconnect." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keeps the clinical channel subscribed so the clinical/raw charts update every minute. Off by default — only needed for stream inspection, and it adds per-reconnect clinical traffic. Takes effect on the next reconnect."
+          }
+        }
+      }
     },
     "Last attempt %@" : {
       "comment" : "Reconnect error: time of last attempt",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last attempt %@"
+          }
+        }
+      }
     },
     "Last Reading" : {
       "comment" : "Settings section: last reading",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last Reading"
+          }
+        }
+      }
     },
     "Last reading %@" : {
       "comment" : "Lifecycle bar detail: time since last reading",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last reading %@"
+          }
+        }
+      }
     },
     "Leave this off unless you understand the implications. You can turn it off again at any time." : {
       "comment" : "Minute-by-minute warning footer",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave this off unless you understand the implications. You can turn it off again at any time."
+          }
+        }
+      }
     },
     "Let the area air-dry completely before applying." : {
       "comment" : "Apply-sensor help step 2 note",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Let the area air-dry completely before applying."
+          }
+        }
+      }
     },
     "Lift the applicator straight away from your arm." : {
       "comment" : "Apply-sensor help step 5 body",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lift the applicator straight away from your arm."
+          }
+        }
+      }
     },
     "Lower = smoother. Realtime and Clinical word[5] should match; Embedded 5-min should be lowest." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lower = smoother. Realtime and Clinical word[5] should match; Embedded 5-min should be lowest."
+          }
+        }
+      }
     },
     "Next" : {
       "comment" : "Next button",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        }
+      }
     },
     "No" : {
       "comment" : "Sample detail: not sent to Loop",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        }
+      }
     },
     "No activity logged yet." : {
       "comment" : "Empty activity log",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No activity logged yet."
+          }
+        }
+      }
     },
     "No activity matching this filter." : {
       "comment" : "Empty filtered activity log",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No activity matching this filter."
+          }
+        }
+      }
     },
     "No clinical raw data yet." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No clinical raw data yet."
+          }
+        }
+      }
     },
     "No readings — replace the sensor." : {
       "comment" : "Last reading placeholder when the sensor has failed",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No readings — replace the sensor."
+          }
+        }
+      }
     },
     "No reads captured yet." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No reads captured yet."
+          }
+        }
+      }
     },
     "Noise (mean |Δ| between consecutive points)" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noise (mean |Δ| between consecutive points)"
+          }
+        }
+      }
     },
     "Not paired" : {
       "comment" : "Connection status: not paired",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not paired"
+          }
+        }
+      }
     },
     "Only one reading every ~5 minutes is sent to %1$@, matching the cadence other CGMs use." : {
       "comment" : "Forwarding footer: minute-by-minute off (1: appName)",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only one reading every ~5 minutes is sent to %1$@, matching the cadence other CGMs use."
+          }
+        }
+      }
     },
     "Pair a new sensor?" : {
       "comment" : "Replace sensor confirmation title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair a new sensor?"
+          }
+        }
+      }
     },
     "Pair new sensor" : {
       "comment" : "Pair new sensor button",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair new sensor"
+          }
+        }
+      }
     },
     "Pair New Sensor" : {
-      "comment" : "Prominent action to pair a new sensor when the current one needs replacement"
+      "comment" : "Prominent action to pair a new sensor when the current one needs replacement",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pair New Sensor"
+          }
+        }
+      }
     },
     "Pairing" : {
       "comment" : "Pairing progress screen title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pairing"
+          }
+        }
+      }
     },
     "Path" : {
       "comment" : "Sample detail: source path",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Path"
+          }
+        }
+      }
     },
     "Preparing…" : {
       "comment" : "Pairing status: preparing",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preparing…"
+          }
+        }
+      }
     },
     "Press the applicator firmly against the prepared site." : {
       "comment" : "Apply-sensor help step 4 body",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Press the applicator firmly against the prepared site."
+          }
+        }
+      }
     },
     "Quality" : {
       "comment" : "Sample detail section: quality",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quality"
+          }
+        }
+      }
     },
     "Rate of change" : {
       "comment" : "Sample detail: rate of change",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate of change"
+          }
+        }
+      }
     },
     "Raw Reads (newest first)" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raw Reads (newest first)"
+          }
+        }
+      }
     },
     "Reading" : {
       "comment" : "Sample detail section: reading",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reading"
+          }
+        }
+      }
     },
     "Realtime (live BLE)" : {
       "comment" : "Sample source: realtime",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Realtime (live BLE)"
+          }
+        }
+      }
     },
     "Reason" : {
       "comment" : "Sample detail: not-forwarded reason",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reason"
+          }
+        }
+      }
     },
     "Receiver ID" : {
       "comment" : "Receiver ID field label\n   Receiver ID row label",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receiver ID"
+          }
+        }
+      }
     },
     "Recent Activity" : {
       "comment" : "Settings section: recent activity log",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recent Activity"
+          }
+        }
+      }
     },
     "Recent Readings" : {
       "comment" : "Settings section: recent readings",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recent Readings"
+          }
+        }
+      }
     },
     "Reconnecting…" : {
       "comment" : "Connection status: reconnecting",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reconnecting…"
+          }
+        }
+      }
     },
     "Recover existing sensor" : {
       "comment" : "Recover existing sensor button\n   Recovery screen title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recover existing sensor"
+          }
+        }
+      }
     },
     "Recovery" : {
       "comment" : "Recovery screen title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recovery"
+          }
+        }
+      }
     },
     "Replace\nSensor" : {
       "comment" : "CGM status highlight: sensor failed, replace it",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replace\nSensor"
+          }
+        }
+      }
     },
     "Replace sensor" : {
       "comment" : "Lifecycle bar detail: replace sensor",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replace sensor"
+          }
+        }
+      }
     },
     "Rising ↗" : {
       "comment" : "Trend: rising",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rising ↗"
+          }
+        }
+      }
     },
     "Rising quickly ⇈" : {
       "comment" : "Trend: rising quickly",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rising quickly ⇈"
+          }
+        }
+      }
     },
     "Run a finger around the adhesive edge to make sure the sensor is secure." : {
       "comment" : "Apply-sensor help step 6 body",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run a finger around the adhesive edge to make sure the sensor is secure."
+          }
+        }
+      }
     },
     "Sample detail" : {
       "comment" : "Sample detail screen title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sample detail"
+          }
+        }
+      }
     },
     "Scan new Sensor" : {
       "comment" : "Scan-sensor screen title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan new Sensor"
+          }
+        }
+      }
     },
     "Searching for sensor over Bluetooth…" : {
       "comment" : "Pairing status: BLE searching",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Searching for sensor over Bluetooth…"
+          }
+        }
+      }
     },
     "Select a site on the back of your upper arm." : {
       "comment" : "Apply-sensor help step 1 body",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a site on the back of your upper arm."
+          }
+        }
+      }
     },
     "Send every reading" : {
       "comment" : "Minute-by-minute warning screen title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send every reading"
+          }
+        }
+      }
     },
     "Send every reading (experimental)" : {
       "comment" : "Experimental minute-by-minute forwarding toggle",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send every reading (experimental)"
+          }
+        }
+      }
     },
     "Sensor" : {
       "comment" : "Sensor model row label\n   Settings section: sensor",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor"
+          }
+        }
+      }
     },
     "Sensor\nExpired" : {
       "comment" : "CGM status highlight: sensor expired",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor\nExpired"
+          }
+        }
+      }
     },
     "Sensor\nStabilizing" : {
       "comment" : "CGM status highlight: sensor stabilizing after pairing",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor\nStabilizing"
+          }
+        }
+      }
     },
     "Sensor\nWarmup" : {
       "comment" : "CGM status highlight: sensor warming up",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor\nWarmup"
+          }
+        }
+      }
     },
     "Sensor %@ paired" : {
       "comment" : "Pairing status: success with serial",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor %@ paired"
+          }
+        }
+      }
     },
     "Sensor diagnostics" : {
       "comment" : "Sample detail section: diagnostics",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensor diagnostics"
+          }
+        }
+      }
     },
     "Sent" : {
       "comment" : "Sample detail: sent to Loop",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sent"
+          }
+        }
+      }
     },
     "Serial" : {
       "comment" : "Sensor serial row label",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serial"
+          }
+        }
+      }
     },
     "Show all %d" : {
       "comment" : "Expand activity log to N lines\n   Expand recent readings list to N",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show all %d"
+          }
+        }
+      }
     },
     "Show fewer" : {
       "comment" : "Collapse activity log\n   Collapse recent readings list",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show fewer"
+          }
+        }
+      }
     },
     "Signal\nLoss" : {
       "comment" : "CGM status highlight: signal loss",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signal\nLoss"
+          }
+        }
+      }
     },
     "Source" : {
       "comment" : "Sample detail section: source",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Source"
+          }
+        }
+      }
     },
     "Stable →" : {
       "comment" : "Trend: stable",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stable →"
+          }
+        }
+      }
     },
     "Start pairing" : {
       "comment" : "Start pairing button",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start pairing"
+          }
+        }
+      }
     },
     "STEP 1" : {
       "comment" : "Apply-sensor help step 1 title\n   Scan-sensor help step 1 title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "STEP 1"
+          }
+        }
+      }
     },
     "STEP 2" : {
       "comment" : "Apply-sensor help step 2 title\n   Scan-sensor help step 2 title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "STEP 2"
+          }
+        }
+      }
     },
     "STEP 3" : {
       "comment" : "Apply-sensor help step 3 title\n   Scan-sensor help step 3 title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "STEP 3"
+          }
+        }
+      }
     },
     "STEP 4" : {
       "comment" : "Apply-sensor help step 4 title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "STEP 4"
+          }
+        }
+      }
     },
     "STEP 5" : {
       "comment" : "Apply-sensor help step 5 title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "STEP 5"
+          }
+        }
+      }
     },
     "STEP 6" : {
       "comment" : "Apply-sensor help step 6 title",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "STEP 6"
+          }
+        }
+      }
     },
     "Temperature (raw)" : {
       "comment" : "Sample detail: raw sensor temperature",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temperature (raw)"
+          }
+        }
+      }
     },
     "The receiver ID is assigned by %1$@ when it first pairs a sensor. It's saved in this app and shown on the Libre 3 settings page — write it down if you want to re-pair this sensor after reinstalling %1$@." : {
       "comment" : "Recovery screen footnote (1: appName)",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The receiver ID is assigned by %1$@ when it first pairs a sensor. It's saved in this app and shown on the Libre 3 settings page — write it down if you want to re-pair this sensor after reinstalling %1$@."
+          }
+        }
+      }
     },
     "The sensor should only be applied to the back of your upper arm." : {
       "comment" : "Apply-sensor instruction",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The sensor should only be applied to the back of your upper arm."
+          }
+        }
+      }
     },
     "The sensor stays on your arm; the applicator comes off empty." : {
       "comment" : "Apply-sensor help step 5 note",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The sensor stays on your arm; the applicator comes off empty."
+          }
+        }
+      }
     },
     "This can change how %1$@ reacts to glucose movement compared to default behavior:" : {
       "comment" : "Minute-by-minute warning paragraph 2 (1: appName)",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This can change how %1$@ reacts to glucose movement compared to default behavior:"
+          }
+        }
+      }
     },
     "This removes the FreeStyle Libre 3 CGM from %1$@. You'll need to re-pair to resume readings." : {
       "comment" : "Delete CGM confirmation message (1: appName)",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This removes the FreeStyle Libre 3 CGM from %1$@. You'll need to re-pair to resume readings."
+          }
+        }
+      }
     },
     "This stops monitoring the current sensor and starts pairing for a new one. The CGM stays configured with Loop." : {
       "comment" : "Replace sensor confirmation message",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This stops monitoring the current sensor and starts pairing for a new one. The CGM stays configured with Loop."
+          }
+        }
+      }
     },
     "Time" : {
       "comment" : "Recent readings column header: time\n   Sample detail: time",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time"
+          }
+        }
+      }
     },
     "Time (relative)" : {
       "comment" : "Sample detail: relative time",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time (relative)"
+          }
+        }
+      }
     },
     "Trend" : {
       "comment" : "Recent readings column header: trend\n   Sample detail: trend",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trend"
+          }
+        }
+      }
     },
     "Try again" : {
       "comment" : "Retry button",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try again"
+          }
+        }
+      }
     },
     "Twist off the cap from the sensor applicator." : {
       "comment" : "Apply-sensor help step 3 body",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Twist off the cap from the sensor applicator."
+          }
+        }
+      }
     },
     "Value" : {
       "comment" : "Sample detail: glucose value",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Value"
+          }
+        }
+      }
     },
     "Waiting for first reading" : {
       "comment" : "Lifecycle bar detail: waiting for first reading",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for first reading"
+          }
+        }
+      }
     },
     "Waiting for first reading…" : {
       "comment" : "Last reading placeholder before the first reading",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for first reading…"
+          }
+        }
+      }
     },
     "Waiting for stream data…" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for stream data…"
+          }
+        }
+      }
     },
     "Wash the site with plain soap, dry, then clean with an alcohol wipe." : {
       "comment" : "Apply-sensor help step 2 body",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wash the site with plain soap, dry, then clean with an alcohol wipe."
+          }
+        }
+      }
     },
     "Yes" : {
       "comment" : "Sample detail: sent to Loop",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yes"
+          }
+        }
+      }
     },
     "Yes (display only)" : {
       "comment" : "Sample detail: sent display-only",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yes (display only)"
+          }
+        }
+      }
     },
     "Your phone will vibrate when pairing succeeds." : {
       "comment" : "Scan-sensor help step 3 body",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your phone will vibrate when pairing succeeds."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
