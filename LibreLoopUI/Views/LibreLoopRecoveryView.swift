@@ -38,7 +38,7 @@ struct LibreLoopRecoveryView: View {
                         if let validationError {
                             Text(validationError)
                                 .font(.footnote)
-                                .foregroundStyle(.red)
+                                .foregroundStyle(.pink)
                         }
                     }
 

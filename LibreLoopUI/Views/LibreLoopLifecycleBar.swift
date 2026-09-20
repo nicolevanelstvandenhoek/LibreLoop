@@ -52,9 +52,9 @@ struct LibreLoopLifecycleBar: View {
         case .warmup:         return .orange
         case .pairingWarmup:  return .orange
         case .active:         return .green
-        case .expired:        return .red
+        case .expired:        return .pink
         case .signalLost:     return .yellow
-        case .failed:         return .red
+        case .failed:         return .pink
         }
     }
 
