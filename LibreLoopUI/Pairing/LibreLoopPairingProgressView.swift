@@ -37,7 +37,7 @@ struct LibreLoopPairingProgressView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(height: 88)
-                .foregroundStyle(.red)
+                .foregroundStyle(.pink)
         } else {
             ProgressView()
                 .controlSize(.large)

@@ -483,7 +483,7 @@ struct LibreLoopSettingsView: View {
         case .connected:     return .green
         case .connecting:    return .yellow
         case .reconnecting:  return .yellow
-        case .disconnected:  return .red
+        case .disconnected:  return .pink
         case .notPaired:     return .gray
         }
     }
