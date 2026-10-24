@@ -1,6 +1,6 @@
 import Foundation
 import HealthKit
-import LibreCRKit
+import RoundWhiteDiscKit
 import LoopAlgorithm
 import LoopKit
 import os.log
@@ -19,7 +19,14 @@ public final class LibreLoopCGMManager: CGMManager {
     public var pluginIdentifier: String { Self.pluginIdentifier }
     public func markAsDepedency(_ isDependency: Bool) {}
 
-    public weak var cgmManagerDelegate: CGMManagerDelegate?
+    public weak var cgmManagerDelegate: CGMManagerDelegate? {
+        didSet { flushPendingDeviceLog() }
+    }
+
+    /// First-time pairing runs on a manager Loop hasn't adopted yet, so its
+    /// device-log lines are held until the delegate arrives.
+    private let pendingDeviceLogLock = NSLock()
+    private var pendingDeviceLog: [(identifier: String?, type: DeviceLogEntryType, message: String)] = []
     public var delegateQueue: DispatchQueue!
 
     public internal(set) var state: LibreLoopCGMManagerState
@@ -287,6 +294,7 @@ public final class LibreLoopCGMManager: CGMManager {
     }
 
     func recordSample(_ sample: LibreLoopGlucoseSample) {
+        recentSamples.removeAll { $0.lifeCount == sample.lifeCount && $0.source != .realtime }
         recentSamples.insert(sample, at: 0)
         if recentSamples.count > Self.recentSamplesCap {
             recentSamples.removeLast(recentSamples.count - Self.recentSamplesCap)
@@ -295,6 +303,18 @@ public final class LibreLoopCGMManager: CGMManager {
         // app launch can repopulate the Last Reading card immediately.
         var updated = state
         updated.latestSample = sample
+        updated.recentSamples = Array(recentSamples.prefix(LibreLoopCGMManagerState.recentSamplesPersistenceCap))
+        setState(updated)
+    }
+
+    /// Adds backfilled readings to Recent Readings, in lifeCount order, without
+    /// touching the Last Reading card.
+    func recordBackfillSamples(_ samples: [LibreLoopGlucoseSample]) {
+        let known = Set(recentSamples.map(\.lifeCount))
+        let added = samples.filter { !known.contains($0.lifeCount) }
+        guard !added.isEmpty else { return }
+        recentSamples = Array((recentSamples + added).sorted { $0.lifeCount > $1.lifeCount }.prefix(Self.recentSamplesCap))
+        var updated = state
         updated.recentSamples = Array(recentSamples.prefix(LibreLoopCGMManagerState.recentSamplesPersistenceCap))
         setState(updated)
     }
@@ -345,14 +365,13 @@ public final class LibreLoopCGMManager: CGMManager {
         // deviceIdentifier still resolves to the session that's ending.
         // Matches the .sensorStart we emitted at pairing time so Loop's
         // CgmEventStore has a clean session boundary.
-        if let serial = state.sensorSerial {
-            let identifier = Self.deviceIdentifier(serial: serial, receiverID: state.receiverID)
+        if let serial = state.sensorSerial, !state.sensorEndRecorded {
             let event = PersistedCgmEvent(
                 date: Date(),
                 type: .sensorEnd,
-                deviceIdentifier: identifier
+                deviceIdentifier: serial
             )
-            llog("emitting CgmEvent .sensorEnd deviceIdentifier=\(identifier)")
+            llog("emitting CgmEvent .sensorEnd deviceIdentifier=\(serial)")
             delegateQueue?.async { [weak self] in
                 guard let self else { return }
                 self.cgmManagerDelegate?.cgmManager(self, hasNew: [event])
@@ -371,6 +390,8 @@ public final class LibreLoopCGMManager: CGMManager {
         blank.latestSample = nil
         blank.recentSamples = []
         blank.expiryAlertsScheduledForActivatedAt = nil
+        blank.reportedSensorIssue = nil
+        blank.sensorEndRecorded = false
         setState(blank)
     }
 
@@ -421,9 +442,9 @@ public final class LibreLoopCGMManager: CGMManager {
     }
 
     public var device: HKDevice? {
-        HKDevice(name: "FreeStyle Libre 3",
+        HKDevice(name: "FreeStyle \(state.sensorModel ?? "Libre 3")",
                  manufacturer: "Abbott",
-                 model: "Libre 3",
+                 model: state.sensorModel,
                  hardwareVersion: nil,
                  firmwareVersion: state.firmwareVersion,
                  softwareVersion: nil,
@@ -431,10 +452,21 @@ public final class LibreLoopCGMManager: CGMManager {
                  udiDeviceIdentifier: nil)
     }
 
+    /// Label of the app credential that paired, or nil when unknown.
+    public var pairedWith: String? {
+        state.sensorSerial
+            .flatMap { try? LibreLoopKeychain.load(forSensorSerial: $0) }?
+            .appIdentity
+    }
+
     public var debugDescription: String {
         """
         ## LibreLoopCGMManager
         * sensorSerial: \(state.sensorSerial ?? "nil")
+        * pairedWith: \(pairedWith ?? "unknown")
+        * securityVersion: \(state.securityVersion.map(String.init) ?? "unknown")
+        * region: \(state.region.map(String.init) ?? "unknown")
+        * appIdentitiesInstalled: \(AppIdentities.isInstalled)
         * activatedAt: \(String(describing: state.activatedAt))
         * latestReadingTimestamp: \(String(describing: state.latestReadingTimestamp))
         """
@@ -651,7 +683,7 @@ public final class LibreLoopCGMManager: CGMManager {
             guard let self else { return }
             let lower = message.lowercased()
             let type: DeviceLogEntryType
-            if lower.contains("error") || lower.contains("fail") {
+            if lower.contains("error") || lower.contains("fail") || lower.contains("reject") {
                 type = .error
             } else if lower.contains("connect") || lower.contains("disconnect") {
                 type = .connection
@@ -659,15 +691,39 @@ public final class LibreLoopCGMManager: CGMManager {
                 type = .receive
             }
             let identifier = self.state.sensorSerial
-            let forward = { [weak self] in
-                guard let self else { return }
-                self.cgmManagerDelegate?.deviceManager(self, logEventForDeviceIdentifier: identifier, type: type, message: message, completion: nil)
+            let held: Bool = self.pendingDeviceLogLock.withLock {
+                guard self.cgmManagerDelegate == nil else { return false }
+                if self.pendingDeviceLog.count < 1000 {
+                    self.pendingDeviceLog.append((identifier, type, message))
+                }
+                return true
             }
-            if let queue = self.delegateQueue {
-                queue.async(execute: forward)
-            } else {
-                forward()
+            if !held {
+                self.forwardDeviceLog(identifier: identifier, type: type, message: message)
             }
+        }
+    }
+
+    private func flushPendingDeviceLog() {
+        guard cgmManagerDelegate != nil else { return }
+        let pending = pendingDeviceLogLock.withLock {
+            defer { pendingDeviceLog.removeAll() }
+            return pendingDeviceLog
+        }
+        for entry in pending {
+            forwardDeviceLog(identifier: entry.identifier, type: entry.type, message: entry.message)
+        }
+    }
+
+    private func forwardDeviceLog(identifier: String?, type: DeviceLogEntryType, message: String) {
+        let forward = { [weak self] in
+            guard let self else { return }
+            self.cgmManagerDelegate?.deviceManager(self, logEventForDeviceIdentifier: identifier, type: type, message: message, completion: nil)
+        }
+        if let queue = delegateQueue {
+            queue.async(execute: forward)
+        } else {
+            forward()
         }
     }
 

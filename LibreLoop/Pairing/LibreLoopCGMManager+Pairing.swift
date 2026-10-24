@@ -1,6 +1,6 @@
 import Foundation
 import HealthKit
-import LibreCRKit
+import RoundWhiteDiscKit
 import LoopAlgorithm
 import LoopKit
 import os.log
@@ -63,7 +63,7 @@ extension LibreLoopCGMManager {
     }
 
     /// Saves the NFC half of pairing the instant it completes successfully,
-    /// before any BLE work. Per LibreCRKit author guidance: a successful A8
+    /// before any BLE work. Per RoundWhiteDiscKit author guidance: a successful A8
     /// burns the previous BLE PIN and issues a new one in the response, so
     /// the new PIN MUST be persisted before we touch BLE -- a crash or
     /// handshake failure must not leave the sensor stranded.
@@ -90,6 +90,12 @@ extension LibreLoopCGMManager {
         if let gen = response.generation {
             newState.generation = gen
         }
+        if let securityVersion = response.securityVersion {
+            newState.securityVersion = securityVersion
+        }
+        if let region = response.region {
+            newState.region = region
+        }
         if let fw = response.firmwareVersion {
             newState.firmwareVersion = fw
         }
@@ -106,7 +112,8 @@ extension LibreLoopCGMManager {
                 kEnc: outcome.result.kEnc,
                 ivEnc: outcome.result.ivEnc,
                 phase5RawKey: outcome.result.phase5RawKey,
-                receiverID: Self.receiverIDFromState(state.receiverID)
+                receiverID: Self.receiverIDFromState(state.receiverID),
+                appIdentity: outcome.result.appIdentity
             ),
             forSensorSerial: outcome.result.sensorSerial
         )
@@ -121,6 +128,8 @@ extension LibreLoopCGMManager {
         // New sensor — clear any prior replace/error state.
         newState.sensorNeedsReplacement = false
         newState.sensorEndedNormally = false
+        newState.reportedSensorIssue = nil
+        newState.sensorEndRecorded = false
         setState(newState)
 
         emitSensorStartEvent(for: newState)
@@ -137,13 +146,8 @@ extension LibreLoopCGMManager {
     /// data to a specific sensor session. Without it, Loop has no record
     /// of when the Libre 3 session began other than inference from the
     /// first sample timestamp.
-    ///
-    /// `deviceIdentifier` is formatted as `<sensorSerial>:<receiverIDHex>`
-    /// so a single sensor paired against different receivers produces
-    /// distinct events.
     private func emitSensorStartEvent(for newState: LibreLoopCGMManagerState) {
         guard let serial = newState.sensorSerial, let activatedAt = newState.activatedAt else { return }
-        let identifier = Self.deviceIdentifier(serial: serial, receiverID: newState.receiverID)
         let lifetime = newState.wearDurationMinutes.map { TimeInterval($0) * 60 }
             ?? LibreLoopSensorLifecycle.activeDuration
         let warmup = newState.warmupDurationMinutes.map { TimeInterval($0) * 60 }
@@ -151,23 +155,15 @@ extension LibreLoopCGMManager {
         let event = PersistedCgmEvent(
             date: activatedAt,
             type: .sensorStart,
-            deviceIdentifier: identifier,
+            deviceIdentifier: serial,
             expectedLifetime: lifetime,
             warmupPeriod: warmup
         )
-        llog("emitting CgmEvent .sensorStart deviceIdentifier=\(identifier) activatedAt=\(activatedAt)")
+        llog("emitting CgmEvent .sensorStart deviceIdentifier=\(serial) activatedAt=\(activatedAt)")
         delegateQueue?.async { [weak self] in
             guard let self else { return }
             self.cgmManagerDelegate?.cgmManager(self, hasNew: [event])
         }
-    }
-
-    /// `<sensorSerial>:<receiverIDHex>` -- matches the existing settings-view
-    /// formatting so the on-screen "Receiver ID" debug row and the
-    /// CgmEvent identifier are derivable from each other.
-    static func deviceIdentifier(serial: String, receiverID: Data?) -> String {
-        let hex = (receiverID ?? Data()).map { String(format: "%02x", $0) }.joined()
-        return hex.isEmpty ? serial : "\(serial):\(hex)"
     }
 
     func adopt(monitor: LibreLoopSensorMonitor) {
@@ -329,6 +325,46 @@ extension LibreLoopCGMManager {
     func handlePatchStatus(_ status: PatchStatus) {
         seedActivatedAtIfNeeded(currentLifeCount: status.currentLifeCount, source: "patch status")
         notifySensorAttentionIfNeeded(status)
+        recordSensorStateIfChanged(status)
+    }
+
+    /// The sensor's own name for what's wrong, or nil while it reports nothing.
+    static func sensorIssue(for status: PatchStatus) -> String? {
+        guard status.sensorAttention != .none else { return nil }
+        return status.sensorError != .none ? status.sensorError.description : status.sensorAttention.description
+    }
+
+    /// Logs a change in the sensor's reported state and sends this sensor's
+    /// `sensorEnd` once it needs replacing. Runs after `notifySensorAttentionIfNeeded`,
+    /// which decides whether the sensor ended normally or failed.
+    func recordSensorStateIfChanged(_ status: PatchStatus) {
+        guard let serial = state.sensorSerial else { return }
+        let issue = Self.sensorIssue(for: status)
+        let ends = state.sensorNeedsReplacement && !state.sensorEndRecorded
+        guard issue != state.reportedSensorIssue || ends else { return }
+
+        var events: [PersistedCgmEvent] = []
+        // The legacy LoopKit has no .sensorIssue event type, CgmEventError or
+        // metadata, so the issue is only logged here. The state is still tracked
+        // so a later sensorEnd isn't suppressed.
+        if let issue, issue != state.reportedSensorIssue {
+            llog("sensor issue \(issue) errorData=\(status.errorData) patchState=\(status.patchState)")
+        }
+        if ends {
+            events.append(PersistedCgmEvent(date: Date(), type: .sensorEnd, deviceIdentifier: serial))
+        }
+
+        var updated = state
+        updated.reportedSensorIssue = issue
+        updated.sensorEndRecorded = updated.sensorEndRecorded || ends
+        setState(updated)
+
+        guard !events.isEmpty else { return }
+        llog("emitting CgmEvents \(events.map(\.type.rawValue)) deviceIdentifier=\(serial)")
+        delegateQueue?.async { [weak self] in
+            guard let self else { return }
+            self.cgmManagerDelegate?.cgmManager(self, hasNew: events)
+        }
     }
 
     /// Surface the sensor's self-reported attention state (LibreCRKit e69dbd6's
@@ -339,7 +375,7 @@ extension LibreLoopCGMManager {
     private func notifySensorAttentionIfNeeded(_ status: PatchStatus) {
         // A code-7 "transmission error" (`Libre3SensorError.transmissionError`)
         // is a transient comms fault, not a terminal replace condition — the
-        // sensor keeps producing valid glucose. LibreCRKit's coarse attention
+        // sensor keeps producing valid glucose. RoundWhiteDiscKit's coarse attention
         // mapping lumps code 7 in with code 8 (terminated) as `.replaceSensor`;
         // downgrade it here to a soft, retractable `.checkSensor` notice so it
         // never marks the sensor inoperable or stops Loop.
@@ -634,8 +670,9 @@ extension LibreLoopCGMManager {
         // (historical and clinical can overlap, and they may not even agree
         // on values for the same lifeCount since they're different sensor
         // pipelines).
-        let realtimeLifeCounts = Set(recentSamples.map { $0.lifeCount })
+        let realtimeLifeCounts = Set(recentSamples.filter { $0.source == .realtime }.map { $0.lifeCount })
         var newSamples: [NewGlucoseSample] = []
+        var displaySamples: [LibreLoopGlucoseSample] = []
         var droppedRealtimeDup = 0
         var droppedBackfillDup = 0
         for sample in page.samples {
@@ -665,8 +702,20 @@ extension LibreLoopCGMManager {
                 syncVersion: 1,
                 device: device
             ))
+            displaySamples.append(LibreLoopGlucoseSample(
+                date: date,
+                valueMgDL: Double(mgdl),
+                trend: .notDetermined,
+                rateOfChangeMgDLPerMinute: nil,
+                lifeCount: sample.lifeCount,
+                sensorTemperatureRaw: 0,
+                isActionable: true,
+                source: .historicalBackfill,
+                wasForwarded: true
+            ))
             backfillForwardedLifeCounts.insert(sample.lifeCount)
         }
+        recordBackfillSamples(displaySamples)
         if !newSamples.isEmpty {
             delegateQueue?.async { [weak self] in
                 guard let self else { return }
@@ -709,10 +758,10 @@ extension LibreLoopCGMManager {
             return
         }
         let serial = state.sensorSerial ?? "unknown"
-        let realtimeLifeCounts = Set(recentSamples.map { $0.lifeCount })
+        let realtimeLifeCounts = Set(recentSamples.filter { $0.source == .realtime }.map { $0.lifeCount })
 
         // Forward only the per-minute `currentGlucoseMgDL` at
-        // `record.lifeCount`. Per upstream LibreCRKit guidance:
+        // `record.lifeCount`. Per upstream RoundWhiteDiscKit guidance:
         // `currentGlucose` is keyed at lifeCount (offset 0) and safe
         // to plot at its own time, while `historicGlucoseRaw` is
         // redundant with the historical samples embedded in realtime
@@ -769,6 +818,17 @@ extension LibreLoopCGMManager {
             device: device
         )
         backfillForwardedLifeCounts.insert(lifeCount)
+        recordBackfillSamples([LibreLoopGlucoseSample(
+            date: date,
+            valueMgDL: Double(mgdl),
+            trend: .notDetermined,
+            rateOfChangeMgDLPerMinute: nil,
+            lifeCount: lifeCount,
+            sensorTemperatureRaw: 0,
+            isActionable: true,
+            source: .clinicalBackfill,
+            wasForwarded: true
+        )])
         llog("forwarded clinical \(kind) sample to Loop: \(mgdl) mg/dL lifeCount=\(lifeCount) sampleDate=\(date.timeIntervalSince1970)")
         delegateQueue?.async { [weak self] in
             guard let self else { return }
@@ -995,7 +1055,8 @@ extension LibreLoopCGMManager {
         }
         // Pull whatever we previously persisted, but reconnect can still run
         // if Keychain has nothing — it'll just use the full handshake path.
-        let cachedPhase5 = (try? LibreLoopKeychain.load(forSensorSerial: serial))?.phase5RawKey
+        let cachedKeys = try? LibreLoopKeychain.load(forSensorSerial: serial)
+        let cachedPhase5 = cachedKeys?.phase5RawKey
         if cachedPhase5 != nil {
             llog("reconnect: cached phase5RawKey available; will try fast path first")
         } else {
@@ -1006,6 +1067,7 @@ extension LibreLoopCGMManager {
                 scanner: scanner,
                 blePIN: blePIN,
                 phase5RawKey: cachedPhase5,
+                appIdentity: cachedKeys?.appIdentity,
                 expectedPeripheralID: expectedPeripheral
             ) { [weak self] stage in
                 llog("reconnect stage: \(String(describing: stage))")
@@ -1019,7 +1081,8 @@ extension LibreLoopCGMManager {
                     kEnc: outcome.kEnc,
                     ivEnc: outcome.ivEnc,
                     phase5RawKey: phase5ToPersist,
-                    receiverID: Self.receiverIDFromState(state.receiverID)
+                    receiverID: Self.receiverIDFromState(state.receiverID),
+                    appIdentity: outcome.phase5RawKey == nil ? cachedKeys?.appIdentity : nil
                 ),
                 forSensorSerial: serial
             )
@@ -1031,8 +1094,7 @@ extension LibreLoopCGMManager {
             }
             llog("reconnect: succeeded via \(outcome.path == .cached ? "cached/direct" : "full") path")
         } catch {
-            let message = (error as? CustomStringConvertible)?.description
-                ?? error.localizedDescription
+            let message = String(describing: error)
             llog("reconnect: attempt failed: \(message)")
             let backoff = await MainActor.run { () -> TimeInterval in
                 self.consecutiveReconnectFailures += 1
@@ -1107,6 +1169,7 @@ extension LibreLoopCGMManager {
         delegateQueue?.async { [weak self] in
             guard let self else { return }
             self.cgmManagerDelegate?.cgmManagerDidUpdateState(self)
+            self.cgmManagerDelegate?.cgmManager(self, didUpdate: self.cgmManagerStatus)
         }
         notifyStateObservers()
     }

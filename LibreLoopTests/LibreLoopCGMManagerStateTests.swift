@@ -1,5 +1,6 @@
 import XCTest
 import LoopKit
+import RoundWhiteDiscKit
 @testable import LibreLoop
 
 final class LibreLoopCGMManagerStateTests: XCTestCase {
@@ -177,5 +178,88 @@ final class LibreLoopAlertRetractionTests: XCTestCase {
         XCTAssertTrue(identifiers.contains(LibreLoopCGMManager.needsReScanAlertID))
         XCTAssertEqual(identifiers.count, LibreLoopCGMManager.allAlertIdentifiers.count,
                        "duplicate identifiers in allAlertIdentifiers")
+    }
+}
+
+final class LibreLoopSensorStateEventTests: XCTestCase {
+    private func status(errorData: Int16 = 0, patchState: Int8 = 4) throws -> PatchStatus {
+        var bytes = [UInt8](repeating: 0, count: PatchStatus.plaintextSize)
+        bytes[2] = UInt8(truncatingIfNeeded: errorData)
+        bytes[3] = UInt8(truncatingIfNeeded: errorData >> 8)
+        bytes[7] = UInt8(bitPattern: patchState)
+        return try PatchStatus(plaintext: Data(bytes))
+    }
+
+    private func manager() -> LibreLoopCGMManager {
+        let manager = LibreLoopCGMManager()
+        var state = LibreLoopCGMManagerState()
+        state.sensorSerial = "0D00ABCDEF"
+        state.activatedAt = Date().addingTimeInterval(-3 * 24 * 60 * 60)
+        manager.state = state
+        return manager
+    }
+
+    func testIssueIsTheSensorErrorOrAttention() throws {
+        XCTAssertNil(LibreLoopCGMManager.sensorIssue(for: try status()))
+        XCTAssertEqual(LibreLoopCGMManager.sensorIssue(for: try status(errorData: 7)), "transmissionError")
+        XCTAssertEqual(LibreLoopCGMManager.sensorIssue(for: try status(patchState: 3)), "checkSensor")
+    }
+
+    func testIssueIsTrackedUntilTheSensorIsHealthy() throws {
+        let manager = manager()
+        manager.handlePatchStatus(try status(errorData: 7))
+        XCTAssertEqual(manager.state.reportedSensorIssue, "transmissionError")
+        manager.handlePatchStatus(try status())
+        XCTAssertNil(manager.state.reportedSensorIssue)
+        XCTAssertFalse(manager.state.sensorEndRecorded)
+    }
+
+    func testReplacementRecordsTheSensorEndOnce() throws {
+        let manager = manager()
+        manager.handlePatchStatus(try status(errorData: 8))
+        XCTAssertEqual(manager.state.reportedSensorIssue, "terminated")
+        XCTAssertTrue(manager.state.sensorEndRecorded)
+        let restored = LibreLoopCGMManagerState(rawValue: manager.state.rawValue)
+        XCTAssertEqual(restored?.reportedSensorIssue, "terminated")
+        XCTAssertEqual(restored?.sensorEndRecorded, true)
+    }
+}
+
+final class LibreLoopRecentReadingsTests: XCTestCase {
+    private let activatedAt = Date(timeIntervalSince1970: 1_700_000_000)
+
+    private func sample(_ lifeCount: UInt16, _ mgdl: Double, source: LibreLoopGlucoseSample.Source = .realtime) -> LibreLoopGlucoseSample {
+        LibreLoopGlucoseSample(
+            date: activatedAt.addingTimeInterval(TimeInterval(lifeCount) * 60),
+            valueMgDL: mgdl,
+            trend: source == .realtime ? .stable : .notDetermined,
+            rateOfChangeMgDLPerMinute: nil,
+            lifeCount: lifeCount,
+            sensorTemperatureRaw: 0,
+            isActionable: true,
+            source: source
+        )
+    }
+
+    func testBackfillFillsTheGapInLifeCountOrder() {
+        let manager = LibreLoopCGMManager()
+        manager.recordSample(sample(100, 90))
+        manager.recordSample(sample(130, 92))
+
+        manager.recordBackfillSamples([sample(110, 93, source: .historicalBackfill), sample(100, 91, source: .historicalBackfill)])
+        manager.recordBackfillSamples([sample(120, 94, source: .clinicalBackfill)])
+
+        XCTAssertEqual(manager.recentSamples.map(\.lifeCount), [130, 120, 110, 100])
+        XCTAssertEqual(manager.recentSamples.map(\.source), [.realtime, .clinicalBackfill, .historicalBackfill, .realtime])
+        XCTAssertEqual(manager.latestSample?.lifeCount, 130)
+    }
+
+    func testRealtimeReplacesBackfillForTheSameMinute() {
+        let manager = LibreLoopCGMManager()
+        manager.recordBackfillSamples([sample(140, 95, source: .clinicalBackfill)])
+        manager.recordSample(sample(140, 96))
+
+        XCTAssertEqual(manager.recentSamples.map(\.lifeCount), [140])
+        XCTAssertEqual(manager.recentSamples.first?.source, .realtime)
     }
 }

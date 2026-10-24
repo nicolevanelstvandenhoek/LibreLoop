@@ -37,11 +37,10 @@ struct LibreLoopSettingsView: View {
             lastReadingSection
             recentReadingsSection
             debugInfoSection
-            // TEMP: hidden pending per-CGM rework; gate forced in ingest(_:).
-            // forwardingSection
             developerSection
             activitySection
             deleteSection
+            aboutSection
         }
         .navigationTitle(LocalizedString("FreeStyle Libre 3 / 3+", comment: "Settings screen title"))
         .navigationBarTitleDisplayMode(.inline)
@@ -154,6 +153,9 @@ struct LibreLoopSettingsView: View {
             || viewModel.receiverIDHex != nil
             || viewModel.firmwareVersion != nil
             || viewModel.generation != nil
+            || viewModel.securityVersion != nil
+            || viewModel.region != nil
+            || viewModel.pairedWith != nil
         if hasAny {
             Section(LocalizedString("Debug Info", comment: "Settings section: debug info")) {
                 if let serial = viewModel.sensorSerial {
@@ -170,6 +172,24 @@ struct LibreLoopSettingsView: View {
                 }
                 if let gen = viewModel.generation {
                     LabeledContent(LocalizedString("Generation", comment: "Sensor generation row label"), value: gen)
+                        .monospaced()
+                        .font(.footnote)
+                        .textSelection(.enabled)
+                }
+                if let securityVersion = viewModel.securityVersion {
+                    LabeledContent(LocalizedString("Security Version", comment: "Sensor security version row label"), value: securityVersion)
+                        .monospaced()
+                        .font(.footnote)
+                        .textSelection(.enabled)
+                }
+                if let region = viewModel.region {
+                    LabeledContent(LocalizedString("Region", comment: "Sensor region row label"), value: region)
+                        .monospaced()
+                        .font(.footnote)
+                        .textSelection(.enabled)
+                }
+                if let pairedWith = viewModel.pairedWith {
+                    LabeledContent(LocalizedString("Paired With", comment: "Row label: the app credential the sensor was paired with"), value: pairedWith)
                         .monospaced()
                         .font(.footnote)
                         .textSelection(.enabled)
@@ -432,6 +452,12 @@ struct LibreLoopSettingsView: View {
         }
     }
 
+    private var aboutSection: some View {
+        Section {
+            LibreLoopNotAbbottNotice(style: .full)
+        }
+    }
+
     private var deleteSection: some View {
         Section {
             Button(LocalizedString("Pair new sensor", comment: "Pair new sensor button")) {
@@ -580,8 +606,14 @@ struct LibreLoopReadingRow: View {
                     .imageScale(.small)
             }
             Spacer()
-            Image(systemName: trendSymbol)
-                .foregroundStyle(.secondary)
+            if sample.source == .realtime {
+                Image(systemName: trendSymbol)
+                    .foregroundStyle(.secondary)
+            } else {
+                Image(systemName: "clock.arrow.circlepath")
+                    .foregroundStyle(.secondary)
+                    .accessibilityLabel(LocalizedString("Backfilled", comment: "Recent readings: backfilled reading marker"))
+            }
         }
         .font(.subheadline)
         .opacity(sample.isActionable ? 1.0 : 0.7)
@@ -658,6 +690,9 @@ final class LibreLoopSettingsViewModel: ObservableObject, LibreLoopStateObserver
     @Published private(set) var sensorModel: String?
     @Published private(set) var firmwareVersion: String?
     @Published private(set) var generation: String?
+    @Published private(set) var securityVersion: String?
+    @Published private(set) var region: String?
+    @Published private(set) var pairedWith: String?
     @Published private(set) var minuteByMinuteForwardingEnabled: Bool
 
     init(cgmManager: LibreLoopCGMManager) {
@@ -677,7 +712,21 @@ final class LibreLoopSettingsViewModel: ObservableObject, LibreLoopStateObserver
         self.sensorModel = cgmManager.state.sensorModel
         self.firmwareVersion = cgmManager.state.firmwareVersion
         self.generation = cgmManager.state.generation.map(String.init)
+        self.securityVersion = cgmManager.state.securityVersion.map(String.init)
+        self.region = cgmManager.state.region.map(Self.regionName)
+        self.pairedWith = cgmManager.pairedWith
         self.minuteByMinuteForwardingEnabled = cgmManager.state.experimentalMinuteByMinuteForwarding
+    }
+
+    /// Region codes as DiaBLE names them, with the raw code kept for reports.
+    private static func regionName(_ code: UInt16) -> String {
+        switch code {
+        case 1: return "\(code) (Europe)"
+        case 2: return "\(code) (US)"
+        case 4: return "\(code) (Australia/Canada)"
+        case 8: return "\(code) (Eastern rest of world)"
+        default: return "\(code)"
+        }
     }
 
     func setMinuteByMinuteForwarding(_ enabled: Bool) {
@@ -729,7 +778,46 @@ final class LibreLoopSettingsViewModel: ObservableObject, LibreLoopStateObserver
             self.sensorModel = state.sensorModel
             self.firmwareVersion = state.firmwareVersion
             self.generation = state.generation.map(String.init)
+            self.securityVersion = state.securityVersion.map(String.init)
+            self.region = state.region.map(Self.regionName)
+            self.pairedWith = manager.pairedWith
             self.minuteByMinuteForwardingEnabled = state.experimentalMinuteByMinuteForwarding
+        }
+    }
+}
+
+/// Abbott is not involved in LibreLoop. Shown during setup and in settings so
+/// the disclaimer reaches people who never read the README.
+struct LibreLoopNotAbbottNotice: View {
+    enum Style {
+        /// Short form, for the bottom of a setup screen.
+        case compact
+        /// Full form, for the CGM settings screen.
+        case full
+    }
+
+    let style: Style
+
+    var body: some View {
+        Text(text)
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+            .multilineTextAlignment(.leading)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private var text: String {
+        switch style {
+        case .compact:
+            return LocalizedString(
+                "LibreLoop is not an Abbott product. It is independent open-source software, not made, endorsed or supported by Abbott. Please don't contact Abbott about it.",
+                comment: "Short non-affiliation notice shown during sensor setup"
+            )
+        case .full:
+            return LocalizedString(
+                "LibreLoop is not an Abbott product. It is independent, community-developed open-source software, and is not made, affiliated with, endorsed, sponsored, reviewed or supported by Abbott Laboratories, Abbott Diabetes Care or any of their affiliates. FreeStyle Libre is a trademark of Abbott, used here only to say which sensors LibreLoop works with. Abbott does not provide support for LibreLoop, so please don't contact them about it.",
+                comment: "Full non-affiliation notice shown in the CGM settings screen"
+            )
         }
     }
 }
