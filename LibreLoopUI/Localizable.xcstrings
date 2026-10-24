@@ -188,7 +188,15 @@
     },
     "Backfilled" : {
       "comment" : "Recent readings: backfilled reading marker",
-      "extractionState" : "manual"
+      "extractionState" : "manual",
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aangevuld"
+          }
+        }
+      }
     },
     "Bluetooth" : {
       "comment" : "Bluetooth address row label\n   Bluetooth connection row label",
@@ -628,9 +636,6 @@
           }
         }
       }
-    },
-    "FreeStyle Libre 3 / 3+" : {
-      "comment" : "Settings screen title"
     },
     "Glucose (mg/dL)" : {
       "comment" : "A section for glucose values.",
