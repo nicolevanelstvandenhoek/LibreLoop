@@ -26,7 +26,7 @@ struct LibreLoopStreamDebugView: View {
     var body: some View {
         List {
             Section {
-                Text("Each series is plotted by lifeCount (minutes since sensor start). Realtime current and Clinical word[5] are identical by spec — clinical dots should land on the realtime line except across reconnect gaps.")
+                Text(LocalizedString("Each series is plotted by lifeCount (minutes since sensor start). Realtime current and Clinical word[5] are identical by spec — clinical dots should land on the realtime line except across reconnect gaps.", comment: ""))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -34,7 +34,7 @@ struct LibreLoopStreamDebugView: View {
             Section {
                 Toggle("Continuous clinical stream", isOn: $continuousClinical)
             } footer: {
-                Text("Keeps the clinical channel subscribed so the clinical/raw charts update every minute. Off by default — only needed for stream inspection, and it adds per-reconnect clinical traffic. Takes effect on the next reconnect.")
+                Text(LocalizedString("Keeps the clinical channel subscribed so the clinical/raw charts update every minute. Off by default — only needed for stream inspection, and it adds per-reconnect clinical traffic. Takes effect on the next reconnect.", comment: ""))
             }
 
             glucoseSection
@@ -52,7 +52,7 @@ struct LibreLoopStreamDebugView: View {
     private var glucoseSection: some View {
         Section("Glucose (mg/dL)") {
             if viewModel.realtime.isEmpty && viewModel.embedded.isEmpty && viewModel.clinicalCurrent.isEmpty {
-                Text("Waiting for stream data…").foregroundStyle(.secondary)
+                Text(LocalizedString("Waiting for stream data…", comment: "")).foregroundStyle(.secondary)
             } else {
                 Chart {
                     ForEach(viewModel.realtime) { p in
@@ -95,7 +95,7 @@ struct LibreLoopStreamDebugView: View {
     private var rawSection: some View {
         Section("Raw sensor channels (clinical word1-3)") {
             if viewModel.raw1.isEmpty {
-                Text("No clinical raw data yet.").foregroundStyle(.secondary)
+                Text(LocalizedString("No clinical raw data yet.", comment: "")).foregroundStyle(.secondary)
             } else {
                 Chart {
                     ForEach(viewModel.raw1) { p in
@@ -137,9 +137,9 @@ struct LibreLoopStreamDebugView: View {
             noiseRow("Raw word2", viewModel.raw2, unit: "")
             noiseRow("Raw word3", viewModel.raw3, unit: "")
         } header: {
-            Text("Noise (mean |Δ| between consecutive points)")
+            Text(LocalizedString("Noise (mean |Δ| between consecutive points)", comment: ""))
         } footer: {
-            Text("Lower = smoother. Realtime and Clinical word[5] should match; Embedded 5-min should be lowest.")
+            Text(LocalizedString("Lower = smoother. Realtime and Clinical word[5] should match; Embedded 5-min should be lowest.", comment: ""))
         }
     }
 
@@ -147,7 +147,7 @@ struct LibreLoopStreamDebugView: View {
     private var readsSection: some View {
         Section {
             if viewModel.reads.isEmpty {
-                Text("No reads captured yet.").foregroundStyle(.secondary)
+                Text(LocalizedString("No reads captured yet.", comment: "")).foregroundStyle(.secondary)
             } else {
                 ForEach(viewModel.reads.prefix(40)) { read in
                     NavigationLink {
@@ -167,9 +167,9 @@ struct LibreLoopStreamDebugView: View {
                 }
             }
         } header: {
-            Text("Raw Reads (newest first)")
+            Text(LocalizedString("Raw Reads (newest first)", comment: ""))
         } footer: {
-            Text("Each entry is one decoded packet. Tap to see when it arrived and every decoded field — including the realtime frame's historical lag, which is why the embedded 5-min value is always ~17 min behind.")
+            Text(LocalizedString("Each entry is one decoded packet. Tap to see when it arrived and every decoded field — including the realtime frame's historical lag, which is why the embedded 5-min value is always ~17 min behind.", comment: ""))
         }
     }
 
