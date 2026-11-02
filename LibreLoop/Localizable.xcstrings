@@ -107,28 +107,6 @@
         }
       }
     },
-    "mg/dL" : {
-      "comment" : "Short unit string for mg/dL",
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "mg/dL"
-          }
-        }
-      }
-    },
-    "mmol/L" : {
-      "comment" : "Short unit string for mmol/L",
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "mmol/L"
-          }
-        }
-      }
-    },
     "No sensor" : {
       "comment" : "Sensor lifecycle: no sensor paired",
       "extractionState" : "manual",

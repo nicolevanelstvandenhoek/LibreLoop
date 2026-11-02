@@ -1,8 +1,7 @@
-import HealthKit
+import SwiftUI
 import LibreLoop
 import LoopAlgorithm
 import LoopKitUI
-import SwiftUI
 
 /// All the diagnostic data we have on one realtime glucose sample,
 /// pushed when the user taps a row in Recent Readings.
@@ -15,7 +14,7 @@ struct LibreLoopSampleDetailView: View {
         List {
             Section(LocalizedString("Reading", comment: "Sample detail section: reading")) {
                 LabeledContent(LocalizedString("Value", comment: "Sample detail: glucose value"), value: displayGlucosePreference.format(
-                    HKQuantity(unit: .milligramsPerDeciliter, doubleValue: sample.valueMgDL)))
+                    LoopQuantity(unit: .milligramsPerDeciliter, doubleValue: sample.valueMgDL)))
                 LabeledContent(LocalizedString("Time", comment: "Sample detail: time"), value: sample.date.formatted(date: .abbreviated, time: .standard))
                 LabeledContent(LocalizedString("Time (relative)", comment: "Sample detail: relative time")) {
                     Text(sample.date, style: .relative)
@@ -24,7 +23,7 @@ struct LibreLoopSampleDetailView: View {
                 LabeledContent(LocalizedString("Trend", comment: "Sample detail: trend"), value: trendLabel)
                 if let rate = sample.rateOfChangeMgDLPerMinute {
                     LabeledContent(LocalizedString("Rate of change", comment: "Sample detail: rate of change"), value: displayGlucosePreference.formatMinuteRate(
-                        HKQuantity(unit: .milligramsPerDeciliterPerMinute, doubleValue: rate)))
+                        LoopQuantity(unit: .milligramsPerDeciliterPerMinute, doubleValue: rate)))
                 } else {
                     LabeledContent(LocalizedString("Rate of change", comment: "Sample detail: rate of change"), value: "—")
                 }

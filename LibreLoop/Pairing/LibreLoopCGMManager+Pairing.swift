@@ -130,6 +130,7 @@ extension LibreLoopCGMManager {
         newState.sensorEndedNormally = false
         newState.reportedSensorIssue = nil
         newState.sensorEndRecorded = false
+        newState.alertedSensorEvent = nil
         setState(newState)
 
         emitSensorStartEvent(for: newState)
@@ -180,6 +181,10 @@ extension LibreLoopCGMManager {
             let delegate = cgmManagerDelegate
             Task { await delegate?.retractAlert(identifier: id) }
         }
+        if let previous = self.monitor, previous !== monitor {
+            llog("adopt: stopping previous monitor")
+            previous.stop()
+        }
         self.monitor = monitor
         self.connectedAt = Date()
         // Fresh session: hasn't streamed a reading yet. Drives the
@@ -192,7 +197,13 @@ extension LibreLoopCGMManager {
         self.lastHistoricalPageAt = nil
         monitor.setHandlers(
             onReading: { [weak self] sample in self?.ingest(sample) },
-            onDisconnect: { [weak self] in self?.handleMonitorDisconnect() },
+            onDisconnect: { [weak self, weak monitor] in
+                guard let self, let monitor, self.monitor === monitor else {
+                    llog("disconnect from a replaced monitor; ignoring")
+                    return
+                }
+                self.handleMonitorDisconnect()
+            },
             onStatus: { [weak self] text in self?.updateStatusDetail(text) },
             onHistoricalPage: { [weak self] page in self?.handleHistoricalPage(page) },
             onClinicalRecord: { [weak self] record in self?.handleClinicalRecord(record) },
@@ -334,7 +345,7 @@ extension LibreLoopCGMManager {
         return status.sensorError != .none ? status.sensorError.description : status.sensorAttention.description
     }
 
-    /// Logs a change in the sensor's reported state and sends this sensor's
+    /// Sends a `sensorIssue` when the sensor's reported state changes, and this sensor's
     /// `sensorEnd` once it needs replacing. Runs after `notifySensorAttentionIfNeeded`,
     /// which decides whether the sensor ended normally or failed.
     func recordSensorStateIfChanged(_ status: PatchStatus) {
@@ -344,11 +355,16 @@ extension LibreLoopCGMManager {
         guard issue != state.reportedSensorIssue || ends else { return }
 
         var events: [PersistedCgmEvent] = []
-        // The legacy LoopKit has no .sensorIssue event type, CgmEventError or
-        // metadata, so the issue is only logged here. The state is still tracked
-        // so a later sensorEnd isn't suppressed.
         if let issue, issue != state.reportedSensorIssue {
-            llog("sensor issue \(issue) errorData=\(status.errorData) patchState=\(status.patchState)")
+            var failed = false
+            if case .failed = sensorLifecycle { failed = true }
+            events.append(PersistedCgmEvent(
+                date: Date(),
+                type: .sensorIssue,
+                deviceIdentifier: serial,
+                error: CgmEventError(code: issue, isFatal: failed),
+                metadata: ["errorData": String(status.errorData), "patchState": String(status.patchState)]
+            ))
         }
         if ends {
             events.append(PersistedCgmEvent(date: Date(), type: .sensorEnd, deviceIdentifier: serial))
@@ -379,7 +395,12 @@ extension LibreLoopCGMManager {
         // mapping lumps code 7 in with code 8 (terminated) as `.replaceSensor`;
         // downgrade it here to a soft, retractable `.checkSensor` notice so it
         // never marks the sensor inoperable or stops Loop.
-        let attention: Libre3SensorAttention = status.sensorError == .transmissionError
+        //
+        // Bytes 0-6 of patch status are the sensor's latest event-log entry, and repeat
+        // until it logs another, so an error code there while the sensor is still active
+        // is history, not its live state. Only a patch state leaving active ends it.
+        let erroredWhileActive = status.isPatchStateActive && status.hasErrorData
+        let attention: Libre3SensorAttention = status.sensorError == .transmissionError || erroredWhileActive
             ? .checkSensor
             : status.sensorAttention
         guard attention != lastSensorAttention else { return }
@@ -411,6 +432,7 @@ extension LibreLoopCGMManager {
         let identifier = Alert.Identifier(managerIdentifier: pluginIdentifier,
                                           alertIdentifier: Self.sensorAttentionAlertID)
         let delegate = cgmManagerDelegate
+        let eventKey = "\(attention)@\(status.lifeCount).\(status.index)"
         let content: (title: String, body: String, level: Alert.InterruptionLevel)?
         switch attention {
         case .replaceSensor:
@@ -421,21 +443,38 @@ extension LibreLoopCGMManager {
             content = (LocalizedString("Sensor ended", comment: "Sensor ended alert title"),
                        LocalizedString("Your FreeStyle Libre 3 sensor session has ended. Replace it to resume CGM readings.", comment: "Sensor ended alert body"),
                        .timeSensitive)
-        case .checkSensor where status.sensorError == .transmissionError:
+        case .checkSensor where status.sensorError == .transmissionError && state.alertedSensorEvent != eventKey:
             // Transient comms fault (code 7). Soft, retractable notice that does
             // not interrupt or stop Loop; readings resume on their own. Retracted
             // as soon as the sensor reports a healthy status again.
             content = (LocalizedString("Check sensor", comment: "Sensor check alert title"),
                        LocalizedString("Loop is having trouble communicating with your FreeStyle Libre 3 sensor. CGM readings may pause briefly and should resume automatically. No action is needed unless this keeps happening.", comment: "Sensor check alert body (transient transmission error)"),
                        .active)
+        case .checkSensor where erroredWhileActive && state.alertedSensorEvent != eventKey:
+            content = (LocalizedString("Check sensor", comment: "Sensor check alert title"),
+                       LocalizedString("Your FreeStyle Libre 3 sensor reported a problem but is still sending readings. Loop will tell you if it stops working.", comment: "Sensor check alert body (error code from an active sensor)"),
+                       .active)
+        case .checkSensor where state.alertedSensorEvent == eventKey:
+            // Already shown for this event entry, before a relaunch or reconnect.
+            return
         case .checkSensor, .none, .unknown:
             // Other transient/cleared states — don't alert; retract any standing one.
             content = nil
         }
 
         guard let content else {
+            if state.alertedSensorEvent != nil {
+                var updated = state
+                updated.alertedSensorEvent = nil
+                setState(updated)
+            }
             Task { await delegate?.retractAlert(identifier: identifier) }
             return
+        }
+        if state.alertedSensorEvent != eventKey {
+            var updated = state
+            updated.alertedSensorEvent = eventKey
+            setState(updated)
         }
         let alert = Alert(
             identifier: identifier,
@@ -586,15 +625,16 @@ extension LibreLoopCGMManager {
 
         let isDisplayOnly = !sample.isActionable
 
-        // TEMP: opt-out ignored — 1-min forwarding disabled pending per-CGM rework in Trio.
-        if let last = state.latestForwardedToLoopAt,
+        if !state.experimentalMinuteByMinuteForwarding,
+           let last = state.latestForwardedToLoopAt,
            sample.date.timeIntervalSince(last) < 270 {
             // Default-mode throttle, applied to actionable AND display-only
             // samples alike: Loop's algorithm is paced around the 5-minute CGM
             // cadence other plugins emit, and per-minute updates — even
             // display-only chart points — pull the cadence away from what Loop
             // was tuned for. 4.5 min gives a 30-second slop under 5 min so the
-            // natural cadence isn't blocked by jitter.
+            // natural cadence isn't blocked by jitter. Opt-out is
+            // experimentalMinuteByMinuteForwarding.
             let age = Int(sample.date.timeIntervalSince(last))
             let tag = isDisplayOnly ? " display-only" : ""
             llog("throttled:\(tag) \(Int(sample.valueMgDL)) mg/dL lifeCount=\(sample.lifeCount) (only \(age)s since last forward; experimental minute-by-minute mode is off)")
@@ -606,9 +646,7 @@ extension LibreLoopCGMManager {
             return
         }
 
-        // LoopKit and LoopAlgorithm both declare GlucoseCondition; disambiguate
-        // to the one NewGlucoseSample.condition expects.
-        let loopCondition: LoopKit.GlucoseCondition?
+        let loopCondition: GlucoseCondition?
         switch sample.condition {
         case .belowRange?: loopCondition = .belowRange
         case .aboveRange?: loopCondition = .aboveRange
@@ -617,11 +655,11 @@ extension LibreLoopCGMManager {
 
         let newSample = NewGlucoseSample(
             date: sample.date,
-            quantity: HKQuantity(unit: .milligramsPerDeciliter, doubleValue: sample.valueMgDL),
+            quantity: LoopQuantity(unit: .milligramsPerDeciliter, doubleValue: sample.valueMgDL),
             condition: loopCondition,
             trend: Self.mapTrend(sample.trend),
             trendRate: sample.rateOfChangeMgDLPerMinute.map {
-                HKQuantity(unit: .milligramsPerDeciliterPerMinute, doubleValue: $0)
+                LoopQuantity(unit: .milligramsPerDeciliterPerMinute, doubleValue: $0)
             },
             isDisplayOnly: isDisplayOnly,
             wasUserEntered: false,
@@ -688,7 +726,7 @@ extension LibreLoopCGMManager {
             let date = activatedAt.addingTimeInterval(TimeInterval(sample.lifeCount) * 60)
             newSamples.append(NewGlucoseSample(
                 date: date,
-                quantity: HKQuantity(unit: .milligramsPerDeciliter, doubleValue: Double(mgdl)),
+                quantity: LoopQuantity(unit: .milligramsPerDeciliter, doubleValue: Double(mgdl)),
                 condition: nil,
                 trend: nil,
                 trendRate: nil,
@@ -700,7 +738,8 @@ extension LibreLoopCGMManager {
                 // duplicate point at the same timestamp.
                 syncIdentifier: "libreloop-\(serial)-\(sample.lifeCount)",
                 syncVersion: 1,
-                device: device
+                device: device,
+                isBackfill: true
             ))
             displaySamples.append(LibreLoopGlucoseSample(
                 date: date,
@@ -807,7 +846,7 @@ extension LibreLoopCGMManager {
         let date = activatedAt.addingTimeInterval(TimeInterval(lifeCount) * 60)
         let sample = NewGlucoseSample(
             date: date,
-            quantity: HKQuantity(unit: .milligramsPerDeciliter, doubleValue: Double(mgdl)),
+            quantity: LoopQuantity(unit: .milligramsPerDeciliter, doubleValue: Double(mgdl)),
             condition: nil,
             trend: nil,
             trendRate: nil,
@@ -815,7 +854,8 @@ extension LibreLoopCGMManager {
             wasUserEntered: false,
             syncIdentifier: "libreloop-\(serial)-\(lifeCount)",
             syncVersion: 1,
-            device: device
+            device: device,
+            isBackfill: true
         )
         backfillForwardedLifeCounts.insert(lifeCount)
         recordBackfillSamples([LibreLoopGlucoseSample(

@@ -392,6 +392,9 @@ public final class LibreLoopCGMManager: CGMManager {
         blank.expiryAlertsScheduledForActivatedAt = nil
         blank.reportedSensorIssue = nil
         blank.sensorEndRecorded = false
+        blank.sensorNeedsReplacement = false
+        blank.sensorEndedNormally = false
+        blank.alertedSensorEvent = nil
         setState(blank)
     }
 
@@ -430,13 +433,9 @@ public final class LibreLoopCGMManager: CGMManager {
         case .warmup, .pairingWarmup: inWarmup = true
         default: inWarmup = false
         }
-        // loopandlearn's LoopKit doesn't expose `inSensorWarmup` /
-        // `isInoperable`. Trio's home view sniffs warmup from
-        // `localizedMessage`; replacement state is reflected via
-        // `hasValidSensorSession`.
-        _ = inWarmup
-        _ = isInoperable
         return CGMManagerStatus(hasValidSensorSession: state.sensorSerial != nil && !state.sensorNeedsReplacement,
+                                inSensorWarmup: inWarmup,
+                                isInoperable: isInoperable,
                                 lastCommunicationDate: state.latestReadingTimestamp,
                                 device: device)
     }
@@ -823,9 +822,7 @@ public final class LibreLoopCGMManager: CGMManager {
 
     // AlertResponder. Tidepool-sync's LoopKit replaced the completion-handler
     // signature with async/throws.
-    public func acknowledgeAlert(alertIdentifier: Alert.AlertIdentifier, completion: @escaping (Error?) -> Void) {
-        completion(nil)
-    }
+    public func acknowledgeAlert(alertIdentifier: Alert.AlertIdentifier) async throws {}
 
     // AlertSoundVendor.
     public func getSoundBaseURL() -> URL? { nil }
@@ -871,6 +868,7 @@ public final class LibreLoopCGMManager: CGMManager {
         eventListenerTask = nil
         // Drop the live monitor and its BLE link so no session of ours lingers
         // on the shared central to collide with a future re-add's handshake.
+        monitor?.stop()
         monitor = nil
         if scannerWasInitialized {
             scanner.stopScan()
@@ -908,9 +906,9 @@ struct LibreLoopGlucoseDisplay: GlucoseDisplayable {
         }
     }
 
-    var trendRate: HKQuantity? {
+    var trendRate: LoopQuantity? {
         sample.rateOfChangeMgDLPerMinute.map {
-            HKQuantity(unit: .milligramsPerDeciliterPerMinute, doubleValue: $0)
+            LoopQuantity(unit: .milligramsPerDeciliterPerMinute, doubleValue: $0)
         }
     }
 }
